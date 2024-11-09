@@ -21,10 +21,13 @@ class Calendar:
         self.tasks = {}
 
     def add_task(self, task):
-        if task.date not in self.tasks:
-            self.tasks[task.date] = []
-        self.tasks[task.date].append(task)
+        # Konwertujemy datę na string w formacie "YYYY-MM-DD"
+        date_key = task.date.strftime("%Y-%m-%d")
+        if date_key not in self.tasks:
+            self.tasks[date_key] = []
+        self.tasks[date_key].append(task)
 
     def get_tasks_for_day(self, date):
+        # Zakładamy, że 'date' jest stringiem w formacie "YYYY-MM-DD"
         return self.tasks.get(date, [])
 
