@@ -118,6 +118,7 @@ class AddTaskDialog(Screen):
         else:
             # Jeśli zadanie zostało dodane poprawnie, zamykamy ekran
             self.app.pop_screen()
+            self.app._load_tasks()
 
 
     @on(Button.Pressed, "#cancel")
