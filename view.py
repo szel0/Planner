@@ -3,7 +3,7 @@ from textual.app import App, on
 from textual.containers import Grid, Horizontal, Vertical
 from textual.widgets import Footer, Header, DataTable, Label, Button, Static, Input
 from textual.screen import Screen
-from model import Priority
+from model import Priority, Task
 
 
 class PlannerApp(App):
@@ -38,8 +38,11 @@ class PlannerApp(App):
             Static(classes="separator"),
         )
 
+
+
         yield Horizontal(tasks_table, buttons_panel)
         yield Footer()
+        yield Label("", id="title")
 
     def on_mount(self):
         self.title = "Task Planner"
@@ -49,8 +52,7 @@ class PlannerApp(App):
     def _load_tasks(self):
         tasks_table = self.query_one(DataTable)
         tasks_table.clear()
-        date = datetime.now().strftime("%Y-%m-%d")  # Example: today's tasks
-        tasks = self.controller.get_tasks_for_day(date)
+        tasks = self.controller.get_all_tasks()
 
         for task in tasks:
             tasks_table.add_row(task.title, task.description, task.date.strftime("%Y-%m-%d"), task.priority)
@@ -61,13 +63,10 @@ class PlannerApp(App):
 
     @on(Button.Pressed, "#edit_task")
     def action_edit_task(self):
-        tasks_table = self.query_one(DataTable)
-        cell_key = tasks_table.coordinate_to_cell_key(tasks_table.cursor_coordinate)
-        row_key = cell_key.row_key
-
-        if row_key:
-            task = self.controller.get_task_by_id(row_key.value)
-            self.push_screen(EditTaskDialog(self.controller, task))
+        if self.controller.tasks:
+            self.push_screen(EditTaskListScreen(self.controller))
+        else:
+            self.query_one("#title").update("No tasks to edit")
 
     @on(Button.Pressed, "#delete_task")
     def action_delete_task(self):
@@ -126,12 +125,51 @@ class AddTaskDialog(Screen):
         self.app.pop_screen()
 
 
+
+class EditTaskListScreen(Screen):
+    def __init__(self, controller):
+        super().__init__()
+        self.controller = controller
+
+    def compose(self):
+        # Tworzymy przyciski dla zadań
+        buttons = [Button(f"{task.title} {task.date.strftime('%Y-%m-%d')}", id=f"task_{task.id}") for task in self.controller.tasks]
+
+        # Zwracamy Grid, w którym przyciski są dodawane przez yield
+        yield Grid(*buttons)
+
+        # Zwracamy przycisk cancel w osobnym wierszu
+        yield Button("Cancel", variant="error", id="cancel")
+
+    @on(Button.Pressed)
+    def on_task_button_pressed(self, message: Button.Pressed):
+        task_id = int(message.button.id.split("_")[1])  # Wyciągamy ID zadania z ID przycisku
+        task = self.controller.get_task_by_id(task_id)
+
+        if task:
+            self.app.push_screen(EditTaskDialog(self.controller, task))
+
+    @on(Button.Pressed, "#cancel")
+    def cancel(self):
+        self.app.pop_screen()
+
+
 class EditTaskDialog(Screen):
     def __init__(self, controller, task):
         super().__init__()
         self.controller = controller
+        self._task = None
         self.task = task
 
+    @property
+    def task(self):
+        return self._task
+
+    @task.setter
+    def task(self, value):
+        if not isinstance(value, Task):
+            raise ValueError("Expected a Task instance")
+        self._task = value
     def compose(self):
         yield Grid(
             Label("Edit Task", id="title"),
@@ -154,9 +192,24 @@ class EditTaskDialog(Screen):
         new_title = self.query_one("#input_title").value
         new_description = self.query_one("#input_description").value
         new_date = self.query_one("#input_date").value
-        new_priority = int(self.query_one("#input_priority").value or self.task.priority)
+        new_priority = self.query_one("#input_priority").value
 
-        # Update the task using the controller
+        # Sprawdzamy czy date i priorytet są poprawne, ustawiamy domyślnie jeśli puste
+        if not new_date:
+            new_date = self.task.date.strftime("%Y-%m-%d")  # Zachowaj istniejącą datę, jeśli nie podano nowej
+        if not new_priority:
+            new_priority = self.task.priority  # Zachowaj istniejący priorytet, jeśli nie podano nowego
+        else:
+            new_priority = int(new_priority)  # Konwertujemy na int, jeśli podano
+
+        # Konwersja daty do obiektu datetime
+        try:
+            new_date = datetime.strptime(new_date, "%Y-%m-%d")
+        except ValueError:
+            self.query_one("#title").update("Invalid date format. Please use 'YYYY-MM-DD'.")
+            return
+
+        # Aktualizowanie zadania w controllerze
         self.controller.edit_task(
             self.task,
             new_title=new_title,
@@ -169,6 +222,7 @@ class EditTaskDialog(Screen):
     @on(Button.Pressed, "#cancel")
     def cancel(self):
         self.app.pop_screen()
+
 
 
 class DeleteConfirm(Screen):
