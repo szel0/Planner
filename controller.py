@@ -1,13 +1,13 @@
-from model import Task, Calendar, Priority
+from model import Task, Priority
 from datetime import datetime
 
 
 class PlannerController:
     def __init__(self):
-        self.calendar = Calendar()
+        self.tasks = []
+        self.task_id = 1
 
     def add_task(self, title, description, date, priority=Priority.MEDIUM):
-
         if not date:
             return datetime.now().strftime("%Y-%m-%d")
         try:
@@ -15,16 +15,22 @@ class PlannerController:
         except ValueError:
             return "Error: Invalid date format. Please use 'YYYY-MM-DD'."
 
-        task = Task(title, description, task_date, priority)
-        self.calendar.add_task(task)
+        task = Task(title, description, task_date, priority, self.task_id)
+        self.tasks.append(task)
+        self.task_id += 1
         return None
 
-    def get_tasks_for_day(self, date):
-        if date is None:
-            date = datetime.now().strftime("%Y-%m-%d")
-        return self.calendar.get_tasks_for_day(date)
+    def get_task_by_id(self, task_id):
+        for task in self.tasks:
+            if task.id == task_id:
+                return task
+        return None
 
-    def edit_task(self, task, new_title=None, new_description=None, new_date=None, new_priority=None):
+    def get_all_tasks(self):
+        return self.tasks
+
+    @staticmethod
+    def edit_task(task, new_title=None, new_description=None, new_date=None, new_priority=None):
         if new_title:
             task.title = new_title
         if new_description:
@@ -35,5 +41,5 @@ class PlannerController:
             task.priority = new_priority
 
     def delete_task(self, task):
-        if task in self.calendar.tasks.get(task.date, []):
-            self.calendar.tasks[task.date].remove(task)
+        if task in self.tasks:
+            self.tasks.remove(task)

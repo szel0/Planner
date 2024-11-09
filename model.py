@@ -1,4 +1,5 @@
-from datetime import datetime
+import uuid
+
 
 class Priority:
     LOW = 1
@@ -6,28 +7,14 @@ class Priority:
     HIGH = 3
     CRITICAL = 4
 
+
 class Task:
-    def __init__(self, title, description, date, priority=Priority.MEDIUM):
+    def __init__(self, title, description, date, priority, task_id=None):
         self.title = title
         self.description = description
         self.date = date
         self.priority = priority
+        self.id = task_id or str(uuid.uuid4())
 
     def __repr__(self):
         return f"Task(title='{self.title}', description='{self.description}', date='{self.date.strftime('%Y-%m-%d')}')"
-
-class Calendar:
-    def __init__(self):
-        self.tasks = {}
-
-    def add_task(self, task):
-        # Konwertujemy datę na string w formacie "YYYY-MM-DD"
-        date_key = task.date.strftime("%Y-%m-%d")
-        if date_key not in self.tasks:
-            self.tasks[date_key] = []
-        self.tasks[date_key].append(task)
-
-    def get_tasks_for_day(self, date):
-        # Zakładamy, że 'date' jest stringiem w formacie "YYYY-MM-DD"
-        return self.tasks.get(date, [])
-
