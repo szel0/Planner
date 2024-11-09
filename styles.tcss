@@ -1,0 +1,58 @@
+
+Filter {
+    align: center middle;
+}
+
+InputDialog {
+    align: center middle;
+}
+
+DeleteConfirm {
+    align: center middle;
+    height: 20;
+}
+
+#confirm-dialog {
+    width: 80;
+    height: 20;
+    border: solid orange;
+}
+
+#input-dialog {
+    width: 100;
+    height: 40;
+    border: solid orange;
+}
+
+
+#input-dialog {
+    width: 100;
+    height: 40;
+    border: solid orange;
+}
+
+#title {
+    column-span: 3;
+    height: 1fr;
+    width: 1fr;
+    content-align: center middle;
+    text-style: bold;
+}
+
+#confirmation {
+    column-span: 3;
+    height: 2fr;
+    width: 1fr;
+    content-align: center middle;
+    text-style: bold;
+}
+
+Button {
+    width: 1fr;
+}
+
+.buttons {
+    width: 100%;
+    height: auto;
+    dock: bottom;
+}
