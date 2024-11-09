@@ -1,4 +1,5 @@
 from model import Task, Calendar, Priority
+from datetime import datetime
 
 
 class PlannerController:
@@ -6,8 +7,17 @@ class PlannerController:
         self.calendar = Calendar()
 
     def add_task(self, title, description, date, priority=Priority.MEDIUM):
-        task = Task(title, description, date, priority)
+
+        if not date:
+            return datetime.now().strftime("%Y-%m-%d")
+        try:
+            task_date = datetime.strptime(date, "%Y-%m-%d")
+        except ValueError:
+            return "Błąd: Niewłaściwy format daty. Użyj formatu 'YYYY-MM-DD'."
+
+        task = Task(title, description, task_date, priority)
         self.calendar.add_task(task)
+        return None
 
     def get_tasks_for_day(self, date):
         if date is None:

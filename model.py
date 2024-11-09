@@ -10,7 +10,7 @@ class Task:
     def __init__(self, title, description, date, priority=Priority.MEDIUM):
         self.title = title
         self.description = description
-        self.date = datetime.strptime(date, "%Y-%m-%d")
+        self.date = date
         self.priority = priority
 
     def __repr__(self):

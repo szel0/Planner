@@ -104,12 +104,21 @@ class AddTaskDialog(Screen):
 
     @on(Button.Pressed, "#ok")
     def submit(self):
-        title = self.query_one("#input_title").value
-        description = self.query_one("#input_description").value
-        date = self.query_one("#input_date").value
+        title = self.query_one("#input_title").value or "Task Title"
+        description = self.query_one("#input_description").value or "Task Description"
+        date = self.query_one("#input_date").value or datetime.now().strftime("%Y-%m-%d")
         priority = int(self.query_one("#input_priority").value or Priority.MEDIUM)
-        self.controller.add_task(title, description, date, priority)
-        self.app.pop_screen()
+
+        # Próbujemy dodać zadanie i łapiemy błędy
+        error_message = self.controller.add_task(title, description, date, priority)
+
+        if error_message:
+            # Jeśli wystąpił błąd, wyświetl komunikat w tytule
+            self.query_one("#title").update(f"{error_message}")  # Wyświetlamy błąd w nagłówku
+        else:
+            # Jeśli zadanie zostało dodane poprawnie, zamykamy ekran
+            self.app.pop_screen()
+
 
     @on(Button.Pressed, "#cancel")
     def cancel(self):
