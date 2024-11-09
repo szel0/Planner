@@ -13,7 +13,7 @@ class PlannerController:
         try:
             task_date = datetime.strptime(date, "%Y-%m-%d")
         except ValueError:
-            return "Błąd: Niewłaściwy format daty. Użyj formatu 'YYYY-MM-DD'."
+            return "Error: Invalid date format. Please use 'YYYY-MM-DD'."
 
         task = Task(title, description, task_date, priority)
         self.calendar.add_task(task)
