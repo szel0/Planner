@@ -66,7 +66,6 @@ class PlannerController:
         tasks = self.tasks
 
         if self.filtered_date:
-            # Porównaj tylko datę, bez godziny
             tasks = [task for task in tasks if task.date.date() == self.filtered_date]
 
         if self.filtered_priority is not None:

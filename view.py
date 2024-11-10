@@ -1,6 +1,6 @@
 from datetime import datetime
 from textual.app import App, on
-from textual.containers import Grid, Horizontal, Vertical, ScrollableContainer
+from textual.containers import Grid, Horizontal, Vertical
 from textual.widgets import Footer, Header, DataTable, Label, Button, Static, Input
 from textual.screen import Screen
 
@@ -19,13 +19,10 @@ class PlannerApp(App):
     def __init__(self, controller):
         super().__init__()
         self.controller = controller
-
-    def action_quit_app(self):
-        self.exit()
+        self.tasks_table = DataTable()
 
     def compose(self):
         yield Header()
-        self.tasks_table = DataTable()
         self.tasks_table.focus()
         self.tasks_table.add_columns("Title", "Description", "Date", "Priority")
         self.tasks_table.zebra_stripes = True
@@ -88,6 +85,9 @@ class PlannerApp(App):
 
         if row_key:
             self.push_screen(DeleteConfirm(self.controller, row_key.value))
+
+    def action_quit_app(self):
+        self.exit()
 
 
 class FilterDialog(Screen):
@@ -178,6 +178,7 @@ class AddTaskDialog(Screen):
     @on(Button.Pressed, "#cancel")
     def cancel(self):
         self.app.pop_screen()
+
 
 class EditTaskDialog(Screen):
     def __init__(self, controller, task_id):
