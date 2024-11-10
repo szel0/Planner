@@ -36,6 +36,8 @@ class PlannerController:
         self.storage = CSVStorage()
         self.tasks = self.storage.load_tasks()
         self.task_id = max([task.id for task in self.tasks], default=0) + 1
+        self.filtered_date = None
+        self.filtered_priority = None
 
     def add_task(self, title, description, date, priority):
         if not date:
@@ -60,8 +62,39 @@ class PlannerController:
                 return task
         return None
 
-    def get_all_tasks(self):
-        return self.tasks
+    def get_filtered_tasks(self):
+        tasks = self.tasks
+
+        if self.filtered_date:
+            tasks = [task for task in tasks if task.date == self.filtered_date]
+
+        if self.filtered_priority is not None:
+            tasks = [task for task in tasks if task.priority == self.filtered_priority]
+
+        return tasks
+
+    def set_filter(self, date_input=None, priority_input=None):
+        if date_input:
+            try:
+                self.filtered_date = datetime.strptime(date_input, "%Y-%m-%d").date()
+            except ValueError:
+                return "Invalid Date format!"
+
+        if priority_input:
+            try:
+                priority = int(priority_input)
+                if 1 <= priority <= 5:
+                    self.filtered_priority = priority
+                else:
+                    return "Priority must be between 1 and 5."
+            except ValueError:
+                return "Invalid Priority!"
+
+        return None
+
+    def clear_filters(self):
+        self.filtered_date = None
+        self.filtered_priority = None
 
     def edit_task(self, task, new_title=None, new_description=None, new_date=None, new_priority=None):
         if new_title:

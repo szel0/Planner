@@ -9,6 +9,7 @@ class PlannerApp(App):
     CSS_PATH = "styles.tcss"
 
     BINDINGS = [
+        ("f", "filter", "Filter"),
         ("a", "add_task", "Add Task"),
         ("e", "edit_task", "Edit Task"),
         ("d", "delete_task", "Delete Task"),
@@ -31,6 +32,7 @@ class PlannerApp(App):
         tasks_table.cursor_type = "row"
 
         buttons_panel = Vertical(
+            Button("Filter", variant="default", id="filter"),
             Button("Add Task", variant="success", id="add_task"),
             Button("Edit Task", variant="primary", id="edit_task"),
             Button("Delete Task", variant="error", id="delete_task"),
@@ -50,10 +52,14 @@ class PlannerApp(App):
         tasks_table = self.query_one(DataTable)
         tasks_table.clear()
         self.controller.sort_tasks_by_date()
-        tasks = self.controller.get_all_tasks()
+        tasks = self.controller.get_filtered_tasks()
 
         for task in tasks:
             tasks_table.add_row(task.title, task.description, task.date.strftime("%Y-%m-%d"), task.priority)
+
+    @on(Button.Pressed, "#filter")
+    def action_filter(self):
+        self.push_screen(FilterDialog(self.controller))
 
     @on(Button.Pressed, "#add_task")
     def action_add_task(self):
@@ -74,27 +80,69 @@ class PlannerApp(App):
             self.query_one("#title").update("No tasks to delete")
 
 
+class FilterDialog(Screen):
+    def __init__(self, controller):
+        super().__init__()
+        self.controller = controller
+
+    def compose(self):
+
+        date_placeholder = self.controller.filtered_date.strftime(
+            "%Y-%m-%d") if self.controller.filtered_date else "YYYY-MM-DD"
+        priority_placeholder = str(
+            self.controller.filtered_priority) if self.controller.filtered_priority is not None else "1-5"
+
+        yield Grid(
+            Label("Filter Tasks", id="title"),
+            Label("Filter by Date (YYYY-MM-DD):"),
+            Input(placeholder=date_placeholder, id="input_date"),
+            Label("Filter by Priority (1-5):"),
+            Input(placeholder=priority_placeholder, id="input_priority"),
+            Button("Clear Filters", variant="default", id="clear_filters"),
+            Button("Apply", variant="success", id="apply_filter"),
+            id="filter-dialog"
+        )
+
+    @on(Button.Pressed, "#clear_filters")
+    def clear_filters(self):
+        self.controller.clear_filters()
+
+        input_date = self.query_one("#input_date")
+        input_priority = self.query_one("#input_priority")
+
+        input_date.placeholder = "YYYY-MM-DD"
+        input_priority.placeholder = "1-5"
+
+    @on(Button.Pressed, "#apply_filter")
+    def apply_filter(self):
+        date_input = self.query_one("#input_date").value
+        priority_input = self.query_one("#input_priority").value
+
+        error_message = self.controller.set_filter(date_input, priority_input)
+
+        if error_message:
+            self.query_one("#title").update(error_message)
+        else:
+            self.app.pop_screen()
+            self.app.load_tasks()
+
+
 class AddTaskDialog(Screen):
     def __init__(self, controller):
         super().__init__()
         self.controller = controller
 
     def compose(self):
-        today_date = datetime.now().strftime("%Y-%m-%d")
         yield Grid(
-            Label("Add Task", id="title"),
-            Label("Title:"),
-            Input(placeholder="Task Title", id="input_title"),
-            Label("Description:"),
-            Input(placeholder="Task Description", id="input_description"),
-            Label("Date:"),
-            Input(placeholder=today_date, id="input_date"),
-            Label("Priority:"),
-            Input(placeholder="3", id="input_priority"),
-            Static(),
-            Button("Cancel", variant="error", id="cancel"),
-            Button("Ok", variant="success", id="ok"),
-            id="input-dialog",
+            Label("Filter Tasks", id="title"),
+            Label("Filter by Date (YYYY-MM-DD):"),
+            Input(placeholder="YYYY-MM-DD", id="input_date"),
+            Label("Filter by Priority (1-5):"),
+            Input(placeholder="1-5", id="input_priority"),
+            Button("Clear Filters", variant="default", id="clear_filters"),
+            Button("Apply", variant="success", id="apply_filter"),
+            Button("Cancel", variant="error", id="cancel_filter"),
+            id="filter-dialog"
         )
 
     @on(Button.Pressed, "#ok")
@@ -125,7 +173,7 @@ class TaskListScreen(Screen):
 
     def compose(self):
         buttons = [Button(f"{task.title} {task.date.strftime('%Y-%m-%d')}", id=f"task_{task.id}")
-                   for task in self.controller.tasks]
+                   for task in self.controller.get_filtered_tasks()]
 
         yield ScrollableContainer(*buttons, id="task_list")
 
