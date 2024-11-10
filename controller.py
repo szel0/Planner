@@ -43,6 +43,9 @@ class PlannerController:
         if new_priority:
             task.priority = new_priority
 
+    def sort_tasks_by_date(self, reverse=False):
+        self.tasks.sort(key=lambda task: task.date, reverse=reverse)
+
     def delete_task(self, task):
         if task in self.tasks:
             self.tasks.remove(task)
