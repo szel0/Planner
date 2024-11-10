@@ -38,8 +38,6 @@ class PlannerApp(App):
             Static(classes="separator"),
         )
 
-
-
         yield Horizontal(tasks_table, buttons_panel)
         yield Footer()
         yield Label("", id="title")
@@ -47,11 +45,12 @@ class PlannerApp(App):
     def on_mount(self):
         self.title = "Task Planner"
         self.sub_title = "Manage your tasks"
-        self._load_tasks()
+        self.load_tasks()
 
-    def _load_tasks(self):
+    def load_tasks(self):
         tasks_table = self.query_one(DataTable)
         tasks_table.clear()
+        self.controller.sort_tasks_by_date()
         tasks = self.controller.get_all_tasks()
 
         for task in tasks:
@@ -64,18 +63,16 @@ class PlannerApp(App):
     @on(Button.Pressed, "#edit_task")
     def action_edit_task(self):
         if self.controller.tasks:
-           self.push_screen(EditTaskListScreen(self.controller))
+            self.push_screen(TaskListScreen(self.controller, True))
         else:
             self.query_one("#title").update("No tasks to edit")
 
     @on(Button.Pressed, "#delete_task")
     def action_delete_task(self):
-        tasks_table = self.query_one(DataTable)
-        cell_key = tasks_table.coordinate_to_cell_key(tasks_table.cursor_coordinate)
-        row_key = cell_key.row_key
-
-        if row_key:
-            self.push_screen(DeleteConfirm(self.controller, row_key.value))
+        if self.controller.tasks:
+            self.push_screen(TaskListScreen(self.controller, False))
+        else:
+            self.query_one("#title").update("No tasks to delete")
 
 
 class AddTaskDialog(Screen):
@@ -117,23 +114,23 @@ class AddTaskDialog(Screen):
         else:
             # Jeśli zadanie zostało dodane poprawnie, zamykamy ekran
             self.app.pop_screen()
-            self.app._load_tasks()
-
+            self.app.load_tasks()
 
     @on(Button.Pressed, "#cancel")
     def cancel(self):
         self.app.pop_screen()
 
 
-
-class EditTaskListScreen(Screen):
-    def __init__(self, controller):
+class TaskListScreen(Screen):
+    def __init__(self, controller, edit):
         super().__init__()
         self.controller = controller
+        self.edit = edit
 
     def compose(self):
         # Tworzymy przyciski dla zadań
-        buttons = [Button(f"{task.title} {task.date.strftime('%Y-%m-%d')}", id=f"task_{task.id}") for task in self.controller.tasks]
+        buttons = [Button(f"{task.title} {task.date.strftime('%Y-%m-%d')}", id=f"task_{task.id}")
+                   for task in self.controller.tasks]
 
         # Zawijamy przyciski w Box, aby były przewijalne
         yield ScrollableContainer(*buttons, id="task_list")
@@ -150,9 +147,12 @@ class EditTaskListScreen(Screen):
         task_id = int(message.button.id.split("_")[1])  # Wyciągamy ID zadania z ID przycisku
         task = self.controller.get_task_by_id(task_id)
 
-        if task:
+        if task and self.edit:
             self.app.pop_screen()
             self.app.push_screen(EditTaskDialog(self.controller, task))
+        if task and not self.edit:
+            self.app.pop_screen()
+            self.app.push_screen(DeleteConfirm(self.controller, task))
 
     @on(Button.Pressed, "#cancel")
     def cancel(self):
@@ -219,20 +219,19 @@ class EditTaskDialog(Screen):
             new_priority=new_priority
         )
         self.app.pop_screen()
-        self.app._load_tasks()
+        self.app.load_tasks()
 
     @on(Button.Pressed, "#cancel")
     def cancel(self):
         self.app.pop_screen()
-        self.app.push_screen(EditTaskListScreen(self.controller))
-
+        self.app.push_screen(TaskListScreen(self.controller, True))
 
 
 class DeleteConfirm(Screen):
-    def __init__(self, controller, task_id):
+    def __init__(self, controller, task):
         super().__init__()
         self.controller = controller
-        self.task_id = task_id
+        self.current_task = task
 
     def compose(self):
         yield Grid(
@@ -246,10 +245,9 @@ class DeleteConfirm(Screen):
 
     @on(Button.Pressed, "#confirm")
     def delete(self):
-        task = self.controller.get_task_by_id(self.task_id)
-        self.controller.delete_task(task)
+        self.controller.delete_task(self.current_task)
         self.app.pop_screen()
-        self.app._load_tasks()
+        self.app.load_tasks()
 
     @on(Button.Pressed, "#cancel")
     def cancel(self):
