@@ -1,5 +1,5 @@
 import csv
-from model import Task, Priority
+from model import Task
 from datetime import datetime
 
 
@@ -8,7 +8,6 @@ class CSVStorage:
         self.filename = filename
 
     def save_tasks(self, tasks):
-        """Zapisuje listę zadań do pliku CSV."""
         with open(self.filename, mode="w", newline="") as file:
             writer = csv.writer(file)
             writer.writerow(["Title", "Description", "Date", "Priority", "ID"])  # Nagłówki
@@ -16,12 +15,11 @@ class CSVStorage:
                 writer.writerow([task.title, task.description, task.date.strftime("%Y-%m-%d"), task.priority, task.id])
 
     def load_tasks(self):
-        """Wczytuje listę zadań z pliku CSV."""
         tasks = []
         try:
             with open(self.filename, mode="r") as file:
                 reader = csv.reader(file)
-                next(reader)  # Pomijamy nagłówki
+                next(reader)
                 for row in reader:
                     if row:
                         title, description, date_str, priority, task_id = row
@@ -35,11 +33,11 @@ class CSVStorage:
 
 class PlannerController:
     def __init__(self):
-        self.storage = CSVStorage()  # Inicjalizacja przechowywania w pliku CSV
-        self.tasks = self.storage.load_tasks()  # Wczytujemy istniejące zadania
+        self.storage = CSVStorage()
+        self.tasks = self.storage.load_tasks()
         self.task_id = max([task.id for task in self.tasks], default=0) + 1
 
-    def add_task(self, title, description, date, priority=Priority.MEDIUM):
+    def add_task(self, title, description, date, priority):
         if not date:
             return datetime.now().strftime("%Y-%m-%d")
         try:
@@ -47,13 +45,13 @@ class PlannerController:
         except ValueError:
             return "Error: Invalid date format. Please use 'YYYY-MM-DD'."
 
-        if priority < 1 or priority > 4:
-            return "Error: Priority must be between 1 and 4."
+        if priority < 1 or priority > 5:
+            return "Error: Priority must be between 1 and 5."
 
         task = Task(title, description, task_date, priority, self.task_id)
         self.tasks.append(task)
         self.task_id += 1
-        self.storage.save_tasks(self.tasks)  # Zapisz zadanie do pliku po dodaniu
+        self.storage.save_tasks(self.tasks)
         return None
 
     def get_task_by_id(self, task_id):
@@ -65,16 +63,30 @@ class PlannerController:
     def get_all_tasks(self):
         return self.tasks
 
-    @staticmethod
-    def edit_task(task, new_title=None, new_description=None, new_date=None, new_priority=None):
+    def edit_task(self, task, new_title=None, new_description=None, new_date=None, new_priority=None):
         if new_title:
             task.title = new_title
         if new_description:
             task.description = new_description
+
         if new_date:
-            task.date = new_date
-        if new_priority:
+            try:
+                task.date = datetime.strptime(new_date, "%Y-%m-%d")
+            except ValueError:
+                return "Error: Invalid date format. Please use 'YYYY-MM-DD'."
+
+        if new_priority is not None:
+            try:
+                new_priority = int(new_priority)
+                if new_priority < 1 or new_priority > 5:
+                    raise ValueError("Priority must be between 1 and 5.")
+            except ValueError:
+                return "Priority must be a number between 1 and 5."
+
             task.priority = new_priority
+
+        self.storage.save_tasks(self.tasks)
+        return None
 
     def sort_tasks_by_date(self, reverse=False):
         self.tasks.sort(key=lambda task: task.date, reverse=reverse)
@@ -82,4 +94,4 @@ class PlannerController:
     def delete_task(self, task):
         if task in self.tasks:
             self.tasks.remove(task)
-            self.storage.save_tasks(self.tasks)  # Zapisz zadania po usunięciu
+            self.storage.save_tasks(self.tasks)

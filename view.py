@@ -3,7 +3,6 @@ from textual.app import App, on
 from textual.containers import Grid, Horizontal, Vertical, ScrollableContainer
 from textual.widgets import Footer, Header, DataTable, Label, Button, Static, Input
 from textual.screen import Screen
-from model import Priority
 
 
 class PlannerApp(App):
@@ -91,7 +90,7 @@ class AddTaskDialog(Screen):
             Label("Date:"),
             Input(placeholder=today_date, id="input_date"),
             Label("Priority:"),
-            Input(placeholder=str(Priority.MEDIUM), id="input_priority"),
+            Input(placeholder="3", id="input_priority"),
             Static(),
             Button("Cancel", variant="error", id="cancel"),
             Button("Ok", variant="success", id="ok"),
@@ -103,16 +102,13 @@ class AddTaskDialog(Screen):
         title = self.query_one("#input_title").value or "Task Title"
         description = self.query_one("#input_description").value or "Task Description"
         date = self.query_one("#input_date").value or datetime.now().strftime("%Y-%m-%d")
-        priority = int(self.query_one("#input_priority").value or Priority.MEDIUM)
+        priority = int(self.query_one("#input_priority").value or 3)
 
-        # Próbujemy dodać zadanie i łapiemy błędy
         error_message = self.controller.add_task(title, description, date, priority)
 
         if error_message:
-            # Jeśli wystąpił błąd, wyświetl komunikat w tytule
-            self.query_one("#title").update(f"{error_message}")  # Wyświetlamy błąd w nagłówku
+            self.query_one("#title").update(f"{error_message}")
         else:
-            # Jeśli zadanie zostało dodane poprawnie, zamykamy ekran
             self.app.pop_screen()
             self.app.load_tasks()
 
@@ -128,23 +124,19 @@ class TaskListScreen(Screen):
         self.edit = edit
 
     def compose(self):
-        # Tworzymy przyciski dla zadań
         buttons = [Button(f"{task.title} {task.date.strftime('%Y-%m-%d')}", id=f"task_{task.id}")
                    for task in self.controller.tasks]
 
-        # Zawijamy przyciski w Box, aby były przewijalne
         yield ScrollableContainer(*buttons, id="task_list")
 
-        # Zwracamy przycisk cancel w osobnym wierszu
         yield Button("Cancel", variant="error", id="cancel")
 
     @on(Button.Pressed)
     def on_task_button_pressed(self, message: Button.Pressed):
-        # Sprawdź, czy przycisk ma ID z prefiksem "task_", aby upewnić się, że to przycisk zadania
         if not message.button.id.startswith("task_"):
             return
 
-        task_id = int(message.button.id.split("_")[1])  # Wyciągamy ID zadania z ID przycisku
+        task_id = int(message.button.id.split("_")[1])
         task = self.controller.get_task_by_id(task_id)
 
         if task and self.edit:
@@ -189,37 +181,19 @@ class EditTaskDialog(Screen):
         new_date = self.query_one("#input_date").value
         new_priority = self.query_one("#input_priority").value
 
-        # Sprawdzamy czy data jest poprawna
-        if not new_date:
-            new_date = self.current_task.date.strftime("%Y-%m-%d")  # Zachowaj istniejącą datę, jeśli nie podano nowej
-        try:
-            new_date = datetime.strptime(new_date, "%Y-%m-%d")
-        except ValueError:
-            self.query_one("#title").update("Invalid date format. Please use 'YYYY-MM-DD'.")
-            return
-
-        # Sprawdzanie priorytetu
-        if not new_priority:
-            new_priority = self.current_task.priority  # Zachowaj istniejący priorytet, jeśli nie podano nowego
-        else:
-            try:
-                new_priority = int(new_priority)  # Konwertujemy na int, jeśli podano
-                if new_priority < 1 or new_priority > 4:
-                    raise ValueError("Priority must be between 1 and 4.")
-            except ValueError as e:
-                self.query_one("#title").update(str(e))  # Wyświetl błąd w tytule
-                return
-
-        # Aktualizowanie zadania w controllerze
-        self.controller.edit_task(
+        error_message = self.controller.edit_task(
             self.current_task,
             new_title=new_title,
             new_description=new_description,
             new_date=new_date,
             new_priority=new_priority
         )
-        self.app.pop_screen()
-        self.app.load_tasks()
+
+        if error_message:
+            self.query_one("#title").update(error_message)
+        else:
+            self.app.pop_screen()
+            self.app.load_tasks()
 
     @on(Button.Pressed, "#cancel")
     def cancel(self):
