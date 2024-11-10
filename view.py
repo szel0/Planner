@@ -25,11 +25,11 @@ class PlannerApp(App):
 
     def compose(self):
         yield Header()
-        tasks_table = DataTable()
-        tasks_table.focus()
-        tasks_table.add_columns("Title", "Description", "Date", "Priority")
-        tasks_table.zebra_stripes = True
-        tasks_table.cursor_type = "row"
+        self.tasks_table = DataTable()
+        self.tasks_table.focus()
+        self.tasks_table.add_columns("Title", "Description", "Date", "Priority")
+        self.tasks_table.zebra_stripes = True
+        self.tasks_table.cursor_type = "row"
 
         buttons_panel = Vertical(
             Button("Filter", variant="default", id="filter"),
@@ -39,7 +39,7 @@ class PlannerApp(App):
             Static(classes="separator"),
         )
 
-        yield Horizontal(buttons_panel, tasks_table)
+        yield Horizontal(buttons_panel, self.tasks_table)
         yield Footer()
         yield Label("", id="title")
 
@@ -55,7 +55,13 @@ class PlannerApp(App):
         tasks = self.controller.get_filtered_tasks()
 
         for task in tasks:
-            tasks_table.add_row(task.title, task.description, task.date.strftime("%Y-%m-%d"), task.priority)
+            tasks_table.add_row(
+                task.title,
+                task.description,
+                task.date.strftime("%Y-%m-%d"),
+                task.priority,
+                key=task.id
+            )
 
     @on(Button.Pressed, "#filter")
     def action_filter(self):
@@ -67,17 +73,21 @@ class PlannerApp(App):
 
     @on(Button.Pressed, "#edit_task")
     def action_edit_task(self):
-        if self.controller.tasks:
-            self.push_screen(TaskListScreen(self.controller, True))
-        else:
-            self.query_one("#title").update("No tasks to edit")
+        tasks = self.query_one(DataTable)
+        cell_key = tasks.coordinate_to_cell_key(tasks.cursor_coordinate)
+        row_key = cell_key.row_key
+
+        if row_key:
+            self.push_screen(EditTaskDialog(self.controller, row_key.value))
 
     @on(Button.Pressed, "#delete_task")
     def action_delete_task(self):
-        if self.controller.tasks:
-            self.push_screen(TaskListScreen(self.controller, False))
-        else:
-            self.query_one("#title").update("No tasks to delete")
+        tasks = self.query_one(DataTable)
+        cell_key = tasks.coordinate_to_cell_key(tasks.cursor_coordinate)
+        row_key = cell_key.row_key
+
+        if row_key:
+            self.push_screen(DeleteConfirm(self.controller, row_key.value))
 
 
 class FilterDialog(Screen):
@@ -169,46 +179,11 @@ class AddTaskDialog(Screen):
     def cancel(self):
         self.app.pop_screen()
 
-
-class TaskListScreen(Screen):
-    def __init__(self, controller, edit):
-        super().__init__()
-        self.controller = controller
-        self.edit = edit
-
-    def compose(self):
-        buttons = [Button(f"{task.title} {task.date.strftime('%Y-%m-%d')}", id=f"task_{task.id}")
-                   for task in self.controller.get_filtered_tasks()]
-
-        yield ScrollableContainer(*buttons, id="task_list")
-
-        yield Button("Cancel", variant="error", id="cancel")
-
-    @on(Button.Pressed)
-    def on_task_button_pressed(self, message: Button.Pressed):
-        if not message.button.id.startswith("task_"):
-            return
-
-        task_id = int(message.button.id.split("_")[1])
-        task = self.controller.get_task_by_id(task_id)
-
-        if task and self.edit:
-            self.app.pop_screen()
-            self.app.push_screen(EditTaskDialog(self.controller, task))
-        if task and not self.edit:
-            self.app.pop_screen()
-            self.app.push_screen(DeleteConfirm(self.controller, task))
-
-    @on(Button.Pressed, "#cancel")
-    def cancel(self):
-        self.app.pop_screen()
-
-
 class EditTaskDialog(Screen):
-    def __init__(self, controller, task):
+    def __init__(self, controller, task_id):
         super().__init__()
         self.controller = controller
-        self.current_task = task
+        self.current_task = self.controller.get_task_by_id(task_id)
 
     def compose(self):
         yield Grid(
@@ -251,14 +226,13 @@ class EditTaskDialog(Screen):
     @on(Button.Pressed, "#cancel")
     def cancel(self):
         self.app.pop_screen()
-        self.app.push_screen(TaskListScreen(self.controller, True))
 
 
 class DeleteConfirm(Screen):
-    def __init__(self, controller, task):
+    def __init__(self, controller, task_id):
         super().__init__()
         self.controller = controller
-        self.current_task = task
+        self.task_id = task_id
 
     def compose(self):
         yield Grid(
@@ -272,7 +246,7 @@ class DeleteConfirm(Screen):
 
     @on(Button.Pressed, "#confirm")
     def delete(self):
-        self.controller.delete_task(self.current_task)
+        self.controller.delete_task(self.task_id)
         self.app.pop_screen()
         self.app.load_tasks()
 

@@ -66,7 +66,8 @@ class PlannerController:
         tasks = self.tasks
 
         if self.filtered_date:
-            tasks = [task for task in tasks if task.date == self.filtered_date]
+            # Porównaj tylko datę, bez godziny
+            tasks = [task for task in tasks if task.date.date() == self.filtered_date]
 
         if self.filtered_priority is not None:
             tasks = [task for task in tasks if task.priority == self.filtered_priority]
@@ -124,7 +125,8 @@ class PlannerController:
     def sort_tasks_by_date(self, reverse=False):
         self.tasks.sort(key=lambda task: task.date, reverse=reverse)
 
-    def delete_task(self, task):
-        if task in self.tasks:
+    def delete_task(self, task_id):
+        task = self.get_task_by_id(task_id)
+        if task:
             self.tasks.remove(task)
             self.storage.save_tasks(self.tasks)
