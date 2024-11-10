@@ -1,44 +1,26 @@
-
-Filter {
-    align: center middle;
+Button {
+    width: 1fr;
 }
-
 InputDialog {
     align: center middle;
 }
-
+EditDialog {
+    align: center middle;
+}
 DeleteConfirm {
     align: center middle;
     height: 20;
 }
-
-#confirm-dialog {
-    width: 80;
-    height: 20;
-    border: solid orange;
-}
-
 #input-dialog {
     width: 100;
-    height: 40;
-    border: solid orange;
+    height: 50;
+    border: round #f0e68c;
 }
-
-
-#input-dialog {
+#edit-dialog {
     width: 100;
-    height: 40;
-    border: solid orange;
+    height: 50;
+    border: round #f0e68c;
 }
-
-#title {
-    column-span: 3;
-    height: 1fr;
-    width: 1fr;
-    content-align: center middle;
-    text-style: bold;
-}
-
 #confirmation {
     column-span: 3;
     height: 2fr;
@@ -46,13 +28,8 @@ DeleteConfirm {
     content-align: center middle;
     text-style: bold;
 }
-
-Button {
-    width: 1fr;
-}
-
-.buttons {
-    width: 100%;
-    height: auto;
-    dock: bottom;
+#confirm-dialog {
+    width: 60;
+    height: 20;
+    border: round red;
 }
