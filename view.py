@@ -37,7 +37,7 @@ class PlannerApp(App):
             Static(classes="separator"),
         )
 
-        yield Horizontal(tasks_table, buttons_panel)
+        yield Horizontal(buttons_panel, tasks_table)
         yield Footer()
         yield Label("", id="title")
 

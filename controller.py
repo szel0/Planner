@@ -10,7 +10,7 @@ class CSVStorage:
     def save_tasks(self, tasks):
         with open(self.filename, mode="w", newline="") as file:
             writer = csv.writer(file)
-            writer.writerow(["Title", "Description", "Date", "Priority", "ID"])  # Nagłówki
+            writer.writerow(["Title", "Description", "Date", "Priority", "ID"])
             for task in tasks:
                 writer.writerow([task.title, task.description, task.date.strftime("%Y-%m-%d"), task.priority, task.id])
 
