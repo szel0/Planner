@@ -15,6 +15,9 @@ class PlannerController:
         except ValueError:
             return "Error: Invalid date format. Please use 'YYYY-MM-DD'."
 
+        if priority < 1 or priority > 4:
+            return "Error: Priority must be between 1 and 4."
+
         task = Task(title, description, task_date, priority, self.task_id)
         self.tasks.append(task)
         self.task_id += 1
