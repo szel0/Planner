@@ -133,16 +133,21 @@ class AddTaskDialog(Screen):
         self.controller = controller
 
     def compose(self):
+        today_date = datetime.now().strftime("%Y-%m-%d")
         yield Grid(
-            Label("Filter Tasks", id="title"),
-            Label("Filter by Date (YYYY-MM-DD):"),
-            Input(placeholder="YYYY-MM-DD", id="input_date"),
-            Label("Filter by Priority (1-5):"),
-            Input(placeholder="1-5", id="input_priority"),
-            Button("Clear Filters", variant="default", id="clear_filters"),
-            Button("Apply", variant="success", id="apply_filter"),
-            Button("Cancel", variant="error", id="cancel_filter"),
-            id="filter-dialog"
+            Label("Add Task", id="title"),
+            Label("Title:"),
+            Input(placeholder="Task Title", id="input_title"),
+            Label("Description:"),
+            Input(placeholder="Task Description", id="input_description"),
+            Label("Date:"),
+            Input(placeholder=today_date, id="input_date"),
+            Label("Priority:"),
+            Input(placeholder="3", id="input_priority"),
+            Static(),
+            Button("Cancel", variant="error", id="cancel"),
+            Button("Ok", variant="success", id="ok"),
+            id="input-dialog",
         )
 
     @on(Button.Pressed, "#ok")
