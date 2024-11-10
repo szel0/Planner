@@ -99,7 +99,7 @@ class FilterDialog(Screen):
             Label("Filter by Priority (1-5):"),
             Input(placeholder=priority_placeholder, id="input_priority"),
             Button("Clear Filters", variant="default", id="clear_filters"),
-            Button("Apply", variant="success", id="apply_filter"),
+            Button("Apply", variant="success", id="apply"),
             id="filter-dialog"
         )
 
@@ -113,7 +113,7 @@ class FilterDialog(Screen):
         input_date.placeholder = "YYYY-MM-DD"
         input_priority.placeholder = "1-5"
 
-    @on(Button.Pressed, "#apply_filter")
+    @on(Button.Pressed, "#apply")
     def apply_filter(self):
         date_input = self.query_one("#input_date").value
         priority_input = self.query_one("#input_priority").value
