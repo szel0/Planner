@@ -1,11 +1,43 @@
+import csv
 from model import Task, Priority
 from datetime import datetime
 
 
+class CSVStorage:
+    def __init__(self, filename="tasks.csv"):
+        self.filename = filename
+
+    def save_tasks(self, tasks):
+        """Zapisuje listę zadań do pliku CSV."""
+        with open(self.filename, mode="w", newline="") as file:
+            writer = csv.writer(file)
+            writer.writerow(["Title", "Description", "Date", "Priority", "ID"])  # Nagłówki
+            for task in tasks:
+                writer.writerow([task.title, task.description, task.date.strftime("%Y-%m-%d"), task.priority, task.id])
+
+    def load_tasks(self):
+        """Wczytuje listę zadań z pliku CSV."""
+        tasks = []
+        try:
+            with open(self.filename, mode="r") as file:
+                reader = csv.reader(file)
+                next(reader)  # Pomijamy nagłówki
+                for row in reader:
+                    if row:
+                        title, description, date_str, priority, task_id = row
+                        date = datetime.strptime(date_str, "%Y-%m-%d")
+                        task = Task(title, description, date, int(priority), int(task_id))
+                        tasks.append(task)
+        except FileNotFoundError:
+            print("No task file found, starting with empty list.")
+        return tasks
+
+
 class PlannerController:
     def __init__(self):
-        self.tasks = []
-        self.task_id = 1
+        self.storage = CSVStorage()  # Inicjalizacja przechowywania w pliku CSV
+        self.tasks = self.storage.load_tasks()  # Wczytujemy istniejące zadania
+        self.task_id = max([task.id for task in self.tasks], default=0) + 1
 
     def add_task(self, title, description, date, priority=Priority.MEDIUM):
         if not date:
@@ -21,6 +53,7 @@ class PlannerController:
         task = Task(title, description, task_date, priority, self.task_id)
         self.tasks.append(task)
         self.task_id += 1
+        self.storage.save_tasks(self.tasks)  # Zapisz zadanie do pliku po dodaniu
         return None
 
     def get_task_by_id(self, task_id):
@@ -49,3 +82,4 @@ class PlannerController:
     def delete_task(self, task):
         if task in self.tasks:
             self.tasks.remove(task)
+            self.storage.save_tasks(self.tasks)  # Zapisz zadania po usunięciu
