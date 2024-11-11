@@ -1,6 +1,7 @@
 import csv
 from model import Task
 from datetime import datetime
+import os
 
 
 class CSVStorage:
@@ -16,18 +17,27 @@ class CSVStorage:
 
     def load_tasks(self):
         tasks = []
+        if not os.path.exists(self.filename):
+            return tasks
         try:
             with open(self.filename, mode="r") as file:
                 reader = csv.reader(file)
                 next(reader)
                 for row in reader:
                     if row:
-                        title, description, date_str, priority, task_id = row
-                        date = datetime.strptime(date_str, "%Y-%m-%d")
-                        task = Task(title, description, date, int(priority), int(task_id))
-                        tasks.append(task)
-        except FileNotFoundError:
-            print("No task file found, starting with empty list.")
+                        try:
+                            title, description, date_str, priority, task_id = row
+                            date = datetime.strptime(date_str, "%Y-%m-%d")  # Konwersja daty
+                            task = Task(title, description, date, int(priority), int(task_id))
+                            tasks.append(task)
+                        except ValueError as e:
+                            print(f"Error parsing row {row}: {e}")
+                            continue
+        except Exception as e:
+            print(f"Error reading file {self.filename}: {e}")
+
+        if not tasks:
+            print("No tasks found or file is empty.")
         return tasks
 
 
@@ -163,7 +173,7 @@ class PlannerController:
         tasks_with_date = [task for task in self.tasks if task.date]
 
         if not tasks_with_date:
-            return None, None
+            return datetime.now().date(), datetime.now().date()
 
         min_date = min(tasks_with_date, key=lambda task: task.date).date
         max_date = max(tasks_with_date, key=lambda task: task.date).date
