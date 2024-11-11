@@ -8,7 +8,10 @@ from textual.screen import Screen
 class PlannerApp(App):
     CSS_PATH = "styles.tcss"
 
+    SORT_TYPES = ["Sort By: Date ASC", "Sort By: Date DESC", "Sort By: Priority ASC", "Sort By: Priority DESC"]
+
     BINDINGS = [
+        ("s", "sort", "Change Sorting Type"),
         ("f", "filter", "Filter"),
         ("a", "add_task", "Add Task"),
         ("e", "edit_task", "Edit Task"),
@@ -20,15 +23,17 @@ class PlannerApp(App):
         super().__init__()
         self.controller = controller
         self.tasks_table = DataTable()
+        self.sort_index = 0
 
     def compose(self):
         yield Header()
-        self.tasks_table.focus()
         self.tasks_table.add_columns("Title", "Description", "Date", "Priority")
         self.tasks_table.zebra_stripes = True
         self.tasks_table.cursor_type = "row"
+        self.tasks_table.focus()
 
         buttons_panel = Vertical(
+            Button(self.SORT_TYPES[self.sort_index], variant="default", id="sort"),
             Button("Filter", variant="default", id="filter"),
             Button("Add Task", variant="success", id="add_task"),
             Button("Edit Task", variant="primary", id="edit_task"),
@@ -48,7 +53,7 @@ class PlannerApp(App):
     def load_tasks(self):
         tasks_table = self.query_one(DataTable)
         tasks_table.clear()
-        self.controller.sort_tasks_by_date()
+        self.controller.sort_tasks_by_key()
         tasks = self.controller.get_filtered_tasks()
 
         for task in tasks:
@@ -59,6 +64,26 @@ class PlannerApp(App):
                 task.priority,
                 key=task.id
             )
+
+    @on(Button.Pressed, "#sort")
+    def action_sort_button_pressed(self):
+        self.sort_index = (self.sort_index + 1) % len(self.SORT_TYPES)
+        self.query_one("#sort").label = self.SORT_TYPES[self.sort_index]
+
+        if self.sort_index == 0:
+            self.controller.sort_key = "date"
+            self.controller.sort_reverse = False
+        elif self.sort_index == 1:
+            self.controller.sort_key = "date"
+            self.controller.sort_reverse = True
+        elif self.sort_index == 2:
+            self.controller.sort_key = "priority"
+            self.controller.sort_reverse = False
+        elif self.sort_index == 3:
+            self.controller.sort_key = "priority"
+            self.controller.sort_reverse = True
+
+        self.load_tasks()
 
     @on(Button.Pressed, "#filter")
     def action_filter(self):
