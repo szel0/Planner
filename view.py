@@ -67,7 +67,7 @@ class PlannerApp(App):
         self.query_one("#title").update("")
 
     @on(Button.Pressed, "#sort")
-    def action_sort_button_pressed(self):
+    def action_sort(self):
         self.sort_index = (self.sort_index + 1) % len(self.SORT_TYPES)
         self.query_one("#sort").label = self.SORT_TYPES[self.sort_index]
 
@@ -160,6 +160,8 @@ class FilterDialog(Screen):
             Input(value=min_priority_value, id="input_min_priority"),
             Label("Filter by Maximum Priority (1-5):"),
             Input(value=max_priority_value, id="input_max_priority"),
+            Label("Filter by Name:"),
+            Input(value=self.controller.filtered_name, id="input_name"),
             Button("Clear Filters", variant="default", id="clear_filters"),
             Button("Apply", variant="success", id="apply"),
             id="filter-dialog"
@@ -173,6 +175,8 @@ class FilterDialog(Screen):
         input_max_date = self.query_one("#input_max_date")
         input_min_priority = self.query_one("#input_min_priority")
         input_max_priority = self.query_one("#input_max_priority")
+        input_name = self.query_one("#input_name")
+
 
         min_date, max_date = self.controller.get_min_max_dates()
 
@@ -180,6 +184,7 @@ class FilterDialog(Screen):
         input_max_date.value = max_date.strftime("%Y-%m-%d")
         input_min_priority.value = "1"
         input_max_priority.value = "5"
+        input_name.value = ""
 
     @on(Button.Pressed, "#apply")
     def apply_filter(self):
@@ -187,12 +192,17 @@ class FilterDialog(Screen):
         max_date_input = self.query_one("#input_max_date").value
         min_priority_input = self.query_one("#input_min_priority").value
         max_priority_input = self.query_one("#input_max_priority").value
+        name_input = self.query_one("#input_name").value
+
+        min_date, max_date = self.controller.get_min_max_dates()
 
         error_message = (self.controller.set_filter(
-            min_date_input or None,
-            max_date_input or None,
-            min_priority_input or None,
-            max_priority_input or None))
+            min_date_input or min_date.strftime("%Y-%m-%d"),
+            max_date_input or max_date.strftime("%Y-%m-%d"),
+            min_priority_input or "1",
+            max_priority_input or "5",
+            name_input
+        ))
 
         if error_message:
             self.query_one("#title").update(error_message)
