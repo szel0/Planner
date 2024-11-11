@@ -48,6 +48,7 @@ class PlannerController:
         self.task_id = max([task.id for task in self.tasks], default=0) + 1
         self.filtered_date = (None, None)
         self.filtered_priority = (None, None)
+        self.filtered_name = ""
         self.sort_key = "date"
         self.sort_reverse = False
 
@@ -103,9 +104,14 @@ class PlannerController:
             elif max_priority is not None:
                 tasks = [task for task in tasks if task.priority <= max_priority]
 
+        if self.filtered_name:
+            tasks = [task for task in tasks if self.filtered_name.lower() in task.title.lower()]
+
         return tasks
 
-    def set_filter(self, min_date_input, max_date_input, min_priority_input, max_priority_input):
+        return tasks
+
+    def set_filter(self, min_date_input, max_date_input, min_priority_input, max_priority_input, name_input):
         try:
             if min_date_input:
                 self.filtered_date = (datetime.strptime(min_date_input, "%Y-%m-%d"), self.filtered_date[1])
@@ -131,6 +137,8 @@ class PlannerController:
 
         if not 1 <= self.filtered_priority[0] <= 5 or not 1 <= self.filtered_priority[1] <= 5:
             return "Priority must be between 1 and 5."
+
+        self.filtered_name = name_input.strip() if name_input else ""
 
         return None
 
