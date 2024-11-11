@@ -38,6 +38,8 @@ class PlannerController:
         self.task_id = max([task.id for task in self.tasks], default=0) + 1
         self.filtered_date = None
         self.filtered_priority = None
+        self.sort_key = "date"
+        self.sort_reverse = False
 
     def add_task(self, title, description, date, priority):
         if not date:
@@ -121,8 +123,11 @@ class PlannerController:
         self.storage.save_tasks(self.tasks)
         return None
 
-    def sort_tasks_by_date(self, reverse=False):
-        self.tasks.sort(key=lambda task: task.date, reverse=reverse)
+    def sort_tasks_by_key(self):
+        if self.sort_key == "date":
+            self.tasks.sort(key=lambda task: task.date, reverse=self.sort_reverse)
+        elif self.sort_key == "priority":
+            self.tasks.sort(key=lambda task: task.priority, reverse=self.sort_reverse)
 
     def delete_task(self, task_id):
         task = self.get_task_by_id(task_id)
