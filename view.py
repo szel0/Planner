@@ -64,6 +64,7 @@ class PlannerApp(App):
                 task.priority,
                 key=task.id
             )
+        self.query_one("#title").update("")
 
     @on(Button.Pressed, "#sort")
     def action_sort_button_pressed(self):
@@ -96,20 +97,36 @@ class PlannerApp(App):
     @on(Button.Pressed, "#edit_task")
     def action_edit_task(self):
         tasks = self.query_one(DataTable)
-        cell_key = tasks.coordinate_to_cell_key(tasks.cursor_coordinate)
-        row_key = cell_key.row_key
 
-        if row_key:
-            self.push_screen(EditTaskDialog(self.controller, row_key.value))
+        if not tasks.rows:
+            self.query_one("#title").update("No tasks available to edit.")
+            return
+
+        try:
+            cell_key = tasks.coordinate_to_cell_key(tasks.cursor_coordinate)
+            row_key = cell_key.row_key
+
+            if row_key:
+                self.push_screen(EditTaskDialog(self.controller, row_key.value))
+        except IndexError:
+            self.query_one("#title").update("No task selected.")
 
     @on(Button.Pressed, "#delete_task")
     def action_delete_task(self):
         tasks = self.query_one(DataTable)
-        cell_key = tasks.coordinate_to_cell_key(tasks.cursor_coordinate)
-        row_key = cell_key.row_key
 
-        if row_key:
-            self.push_screen(DeleteConfirm(self.controller, row_key.value))
+        if not tasks.rows:
+            self.query_one("#title").update("No tasks available to delete.")
+            return
+
+        try:
+            cell_key = tasks.coordinate_to_cell_key(tasks.cursor_coordinate)
+            row_key = cell_key.row_key
+
+            if row_key:
+                self.push_screen(DeleteConfirm(self.controller, row_key.value))
+        except IndexError:
+            self.query_one("#title").update("No task selected.")
 
     def action_quit_app(self):
         self.exit()
@@ -125,11 +142,9 @@ class FilterDialog(Screen):
         min_date, max_date = self.controller.get_min_max_dates()
 
         min_date_value = self.controller.filtered_date[0].strftime("%Y-%m-%d") \
-            if self.controller.filtered_date[0] else min_date.strftime("%Y-%m-%d") \
-            if min_date else None
+            if self.controller.filtered_date[0] else min_date.strftime("%Y-%m-%d")
         max_date_value = self.controller.filtered_date[1].strftime("%Y-%m-%d") \
-            if self.controller.filtered_date[1] else max_date.strftime("%Y-%m-%d") \
-            if max_date else None
+            if self.controller.filtered_date[1] else max_date.strftime("%Y-%m-%d")
         min_priority_value = str(self.controller.filtered_priority[0]) \
             if self.controller.filtered_priority[0] else "1"
         max_priority_value = str(self.controller.filtered_priority[1]) \
@@ -161,8 +176,8 @@ class FilterDialog(Screen):
 
         min_date, max_date = self.controller.get_min_max_dates()
 
-        input_min_date.value = min_date.strftime("%Y-%m-%d") if min_date else None
-        input_max_date.value = max_date.strftime("%Y-%m-%d") if max_date else None
+        input_min_date.value = min_date.strftime("%Y-%m-%d")
+        input_max_date.value = max_date.strftime("%Y-%m-%d")
         input_min_priority.value = "1"
         input_max_priority.value = "5"
 
