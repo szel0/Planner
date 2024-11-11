@@ -122,17 +122,29 @@ class FilterDialog(Screen):
 
     def compose(self):
 
-        date_placeholder = self.controller.filtered_date.strftime(
-            "%Y-%m-%d") if self.controller.filtered_date else "YYYY-MM-DD"
-        priority_placeholder = str(
-            self.controller.filtered_priority) if self.controller.filtered_priority is not None else "1-5"
+        min_date, max_date = self.controller.get_min_max_dates()
+
+        min_date_value = self.controller.filtered_date[0].strftime("%Y-%m-%d") \
+            if self.controller.filtered_date[0] else min_date.strftime("%Y-%m-%d") \
+            if min_date else None
+        max_date_value = self.controller.filtered_date[1].strftime("%Y-%m-%d") \
+            if self.controller.filtered_date[1] else max_date.strftime("%Y-%m-%d") \
+            if max_date else None
+        min_priority_value = str(self.controller.filtered_priority[0]) \
+            if self.controller.filtered_priority[0] else "1"
+        max_priority_value = str(self.controller.filtered_priority[1]) \
+            if self.controller.filtered_priority[1] else "5"
 
         yield Grid(
             Label("Filter Tasks", id="title"),
-            Label("Filter by Date (YYYY-MM-DD):"),
-            Input(placeholder=date_placeholder, id="input_date"),
-            Label("Filter by Priority (1-5):"),
-            Input(placeholder=priority_placeholder, id="input_priority"),
+            Label("Filter by Minimum Date (YYYY-MM-DD):"),
+            Input(value=min_date_value, id="input_min_date"),
+            Label("Filter by Maximum Date (YYYY-MM-DD):"),
+            Input(value=max_date_value, id="input_max_date"),
+            Label("Filter by Minimum Priority (1-5):"),
+            Input(value=min_priority_value, id="input_min_priority"),
+            Label("Filter by Maximum Priority (1-5):"),
+            Input(value=max_priority_value, id="input_max_priority"),
             Button("Clear Filters", variant="default", id="clear_filters"),
             Button("Apply", variant="success", id="apply"),
             id="filter-dialog"
@@ -142,18 +154,30 @@ class FilterDialog(Screen):
     def clear_filters(self):
         self.controller.clear_filters()
 
-        input_date = self.query_one("#input_date")
-        input_priority = self.query_one("#input_priority")
+        input_min_date = self.query_one("#input_min_date")
+        input_max_date = self.query_one("#input_max_date")
+        input_min_priority = self.query_one("#input_min_priority")
+        input_max_priority = self.query_one("#input_max_priority")
 
-        input_date.placeholder = "YYYY-MM-DD"
-        input_priority.placeholder = "1-5"
+        min_date, max_date = self.controller.get_min_max_dates()
+
+        input_min_date.value = min_date.strftime("%Y-%m-%d") if min_date else None
+        input_max_date.value = max_date.strftime("%Y-%m-%d") if max_date else None
+        input_min_priority.value = "1"
+        input_max_priority.value = "5"
 
     @on(Button.Pressed, "#apply")
     def apply_filter(self):
-        date_input = self.query_one("#input_date").value
-        priority_input = self.query_one("#input_priority").value
+        min_date_input = self.query_one("#input_min_date").value
+        max_date_input = self.query_one("#input_max_date").value
+        min_priority_input = self.query_one("#input_min_priority").value
+        max_priority_input = self.query_one("#input_max_priority").value
 
-        error_message = self.controller.set_filter(date_input, priority_input)
+        error_message = (self.controller.set_filter(
+            min_date_input or None,
+            max_date_input or None,
+            min_priority_input or None,
+            max_priority_input or None))
 
         if error_message:
             self.query_one("#title").update(error_message)
@@ -190,7 +214,7 @@ class AddTaskDialog(Screen):
         title = self.query_one("#input_title").value or "Task Title"
         description = self.query_one("#input_description").value or "Task Description"
         date = self.query_one("#input_date").value or datetime.now().strftime("%Y-%m-%d")
-        priority = int(self.query_one("#input_priority").value or 3)
+        priority = self.query_one("#input_priority").value or "3"
 
         error_message = self.controller.add_task(title, description, date, priority)
 
@@ -237,10 +261,10 @@ class EditTaskDialog(Screen):
 
         error_message = self.controller.edit_task(
             self.current_task,
-            new_title=new_title,
-            new_description=new_description,
-            new_date=new_date,
-            new_priority=new_priority
+            new_title,
+            new_description,
+            new_date,
+            new_priority
         )
 
         if error_message:
