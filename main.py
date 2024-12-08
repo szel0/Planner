@@ -1,6 +1,6 @@
 import argparse
 from view_cli import CLI_PlannerApp
-#from view_gui import GUI_PlannerApp
+from view_gui import GUI_PlannerApp
 from controller import PlannerController
 
 def main():
@@ -21,14 +21,13 @@ def main():
 
     if args.cli:
         app = CLI_PlannerApp(PlannerController())
+        app.run()
     elif args.gui:
-        #app = GUI_PlannerApp(PlannerController())
-        print("siema")
+        app = GUI_PlannerApp(PlannerController())
+        app.window.mainloop()
     else:
         print("Dodaj flage -cli lub -gui.")
         return
-    
-    app.run()
 
 if __name__ == '__main__':
     main()

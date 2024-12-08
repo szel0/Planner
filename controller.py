@@ -1,4 +1,5 @@
 import csv
+import logging
 from model import Task
 from datetime import datetime
 import os
@@ -9,17 +10,24 @@ class CSVStorage:
         self.filename = filename
         self.log_filename = log_filename
 
+        logging.basicConfig(
+            filename=self.log_filename,
+            level=logging.ERROR,
+            format="%(asctime)s - %(levelname)s - %(message)s"
+        )
+
     def save_tasks(self, tasks):
-        with open(self.filename, mode="w", newline="") as file:
-            writer = csv.writer(file)
-            writer.writerow(["Title", "Description", "Date", "Priority", "ID"])
-            for task in tasks:
-                writer.writerow([task.title, task.description, task.date.strftime("%Y-%m-%d"), task.priority, task.id])
+        try:
+            with open(self.filename, mode="w", newline="") as file: 
+                writer = csv.writer(file)
+                writer.writerow(["Title", "Description", "Date", "Priority", "ID"])
+                for task in tasks:
+                    writer.writerow([task.title, task.description, task.date.strftime("%Y-%m-%d"), task.priority, task.id])
+        except Exception as e:
+            logging.error(f"Error saving data to {self.filename}: {e}")
 
     def load_tasks(self):
         tasks = []
-        if not os.path.exists(self.filename):
-            return tasks
         try:
             with open(self.filename, mode="r") as file:
                 reader = csv.reader(file)
@@ -32,13 +40,13 @@ class CSVStorage:
                             task = Task(title, description, date, int(priority), int(task_id))
                             tasks.append(task)
                         except ValueError as e:
-                            print(f"Error parsing row {row}: {e}")
+                            logging.error(f"Error parsing row {row}: {e}")
                             continue
         except Exception as e:
-            print(f"Error reading file {self.filename}: {e}")
+            logging.error(f"Error reading file {self.filename}: {e}")
 
         if not tasks:
-            print("No tasks found or file is empty.")
+            logging.warning("No tasks found or file is empty.")
         return tasks
 
 
