@@ -5,8 +5,9 @@ import os
 
 
 class CSVStorage:
-    def __init__(self, filename="tasks.csv"):
+    def __init__(self, filename="tasks.csv", log_filename="errors.log"):
         self.filename = filename
+        self.log_filename = log_filename
 
     def save_tasks(self, tasks):
         with open(self.filename, mode="w", newline="") as file:

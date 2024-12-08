@@ -5,7 +5,7 @@ from textual.widgets import Footer, Header, DataTable, Label, Button, Static, In
 from textual.screen import Screen
 
 
-class PlannerApp(App):
+class CLI_PlannerApp(App):
     CSS_PATH = "styles.tcss"
 
     SORT_TYPES = ["Sort By: Date ASC", "Sort By: Date DESC", "Sort By: Priority ASC", "Sort By: Priority DESC"]
