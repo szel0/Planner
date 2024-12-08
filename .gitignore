@@ -1,0 +1,22 @@
+# Ignorowanie katalogów wirtualnego środowiska
+venv/
+
+# Ignorowanie plików cache Pythona
+__pycache__/
+
+# Plik konfiguracyjny edytora tekstowego lub IDE (opcjonalnie)
+*.vscode/
+
+# Pliki tymczasowe systemu
+*.log
+*.tmp
+*.bak
+
+# Pliki tymczasowe edytorów (np. Vim, Emacs)
+*.swp
+*.swo
+.*.swp
+
+# Pliki binarne lub wynikowe
+*.pyc
+*.pyo
