@@ -1,84 +1,73 @@
 Title,Description,Date,Priority,ID
-11,11,2024-10-09,5,1144
-Task Title,Task Description,2024-11-11,5,1142
+analyze123,Investigate data trends project.,2024-11-02,1,1001
 Task Title,Task Description,2024-11-11,2,1141
-refactor,Refactor codebase for better readability.,2024-11-12,5,1005
-document,Document API usage for developers.,2024-11-12,5,1010
-evaluate,Evaluate new software tools for the team.,2024-11-12,5,1016
-optimize,Optimize website load speed.,2024-11-12,4,1004
-organize,Organize team meeting for upcoming project.,2024-11-12,4,1009
-deploy,Deploy new version of the app.,2024-11-12,4,1013
-auditelo,Audit project budget and expenses.,2024-11-12,4,1018
-manage,Oversee team coordination for tasks.,2024-11-12,3,1003
-plan,Develop project roadmap for next quarter.,2024-11-12,3,1006
-review,Review code pull request.,2024-11-12,3,1012
-schedule,Schedule interviews for new hires.,2024-11-12,3,1015
-update,Update project documentation with recent changes.,2024-11-12,3,1019
-improve,Enhance user experience design.,2024-11-12,2,1002
-test,Run tests on new features.,2024-11-12,2,1007
-design,Design new interface for application.,2024-11-12,2,1011
-train,Train new team members on processes.,2024-11-12,2,1017
-analyze,Investigate data trends project.,2024-11-12,1,1001
+Task Title,Task Description,2024-11-11,5,1142
 research,Research market trends for new product.,2024-11-12,1,1008
 communicate,Communicate project progress with stakeholders.,2024-11-12,1,1014
 coordinate,Coordinate with external partners for collaboration.,2024-11-12,1,1020
-analyze,Analyze user feedback for recent updates.,2024-11-13,5,1025
-improve,Improve backend server response times.,2024-11-13,5,1030
-train,Train customer support team on new product features.,2024-11-13,5,1036
-test,Test new functionality in the app.,2024-11-13,4,1024
-design,Design new marketing materials for the product.,2024-11-13,4,1029
-deploy,Deploy hotfix for security vulnerabilities.,2024-11-13,4,1033
-audit,Audit system logs for potential issues.,2024-11-13,4,1037
+test,Run tests on new features.,2024-11-12,2,1007
+design,Design new interface for application.,2024-11-12,2,1011
+train,Train new team members on processes.,2024-11-12,2,1017
+plan,Develop project roadmap for next quarter.,2024-11-12,3,1006
+schedule,Schedule interviews for new hires.,2024-11-12,3,1015
+deploy,Deploy new version of the app.,2024-11-12,4,1013
+auditelo,Audit project budget and expenses.,2024-11-12,4,1018
+refactor,Refactor codebase for better readability.,2024-11-12,5,1005
+document,Document API usage for developers.,2024-11-12,5,1010
+research,Research potential competitors for new product.,2024-11-13,1,1021
+refactor,Refactor database queries for better performance.,2024-11-13,1,1028
+coordinate,Coordinate with design team on new features.,2024-11-13,1,1034
+communicate,Communicate app updates to the user community.,2024-11-13,1,1039
+update,Update user documentation with new features.,2024-11-13,2,1022
+organize,Organize team task assignments for the next sprint.,2024-11-13,2,1027
+schedule,Schedule demo presentation for the stakeholders.,2024-11-13,2,1032
+evaluate,Evaluate potential new software providers for the team.,2024-11-13,2,1038
 create,Create marketing strategy for product launch.,2024-11-13,3,1023
 plan,Plan team-building event for the office.,2024-11-13,3,1026
 review,Review customer service feedback for improvements.,2024-11-13,3,1031
 optimize,Optimize website for mobile performance.,2024-11-13,3,1035
 document,Document new processes and workflows.,2024-11-13,3,1040
-update,Update user documentation with new features.,2024-11-13,2,1022
-organize,Organize team task assignments for the next sprint.,2024-11-13,2,1027
-schedule,Schedule demo presentation for the stakeholders.,2024-11-13,2,1032
-evaluate,Evaluate potential new software providers for the team.,2024-11-13,2,1038
-research,Research potential competitors for new product.,2024-11-13,1,1021
-refactor,Refactor database queries for better performance.,2024-11-13,1,1028
-coordinate,Coordinate with design team on new features.,2024-11-13,1,1034
-communicate,Communicate app updates to the user community.,2024-11-13,1,1039
-refactor,Refactor codebase for better readability.,2024-11-14,5,1045
-train,Train new employees on internal processes.,2024-11-14,5,1050
-audit,Audit marketing spending for Q4.,2024-11-14,5,1055
-coordinate,Coordinate with vendors for upcoming project.,2024-11-14,5,1059
-implement,Implement new design for homepage.,2024-11-14,4,1044
-update,Update API documentation.,2024-11-14,4,1049
-design,Design user interface for new app version.,2024-11-14,4,1053
-debug,Debug issue with user registration process.,2024-11-14,4,1057
+test,Test new functionality in the app.,2024-11-13,4,1024
+design,Design new marketing materials for the product.,2024-11-13,4,1029
+deploy,Deploy hotfix for security vulnerabilities.,2024-11-13,4,1033
+audit,Audit system logs for potential issues.,2024-11-13,4,1037
+analyze,Analyze user feedback for recent updates.,2024-11-13,5,1025
+improve,Improve backend server response times.,2024-11-13,5,1030
+train,Train customer support team on new product features.,2024-11-13,5,1036
+valuate,Evaluate customer feedback for new feature.,2024-11-14,1,1041
+optimize,Optimize database indexing for speed.,2024-11-14,1,1047
+create,Create content for social media marketing.,2024-11-14,1,1054
+test,Test user authentication system for vulnerabilities.,2024-11-14,2,1042
+manage,Manage customer service queue.,2024-11-14,2,1046
+write,Write blog post about product features.,2024-11-14,2,1052
+analyze,Analyze performance of recent ad campaign.,2024-11-14,2,1058
 review,Review code for upcoming release.,2024-11-14,3,1043
 prepare,Prepare financial report for the month.,2024-11-14,3,1048
 plan,Plan end-of-year company event.,2024-11-14,3,1051
 organize,Organize product demo for new clients.,2024-11-14,3,1056
 sync,Sync project management tools with team members.,2024-11-14,3,1060
-test,Test user authentication system for vulnerabilities.,2024-11-14,2,1042
-manage,Manage customer service queue.,2024-11-14,2,1046
-write,Write blog post about product features.,2024-11-14,2,1052
-analyze,Analyze performance of recent ad campaign.,2024-11-14,2,1058
-valuate,Evaluate customer feedback for new feature.,2024-11-14,1,1041
-optimize,Optimize database indexing for speed.,2024-11-14,1,1047
-create,Create content for social media marketing.,2024-11-14,1,1054
-implement,Implement security patch for web application.,2024-11-15,5,1065
-debug,Debug critical issue in mobile app.,2024-11-15,5,1070
-audit,Audit project budget for Q4 spending.,2024-11-15,5,1075
-coordinate,Coordinate with design team on new branding.,2024-11-15,5,1079
-train,Train sales team on new product features.,2024-11-15,5,1090
-sync,Sync data between internal and external systems.,2024-11-15,5,1096
-debug,Debug error with payment gateway integration.,2024-11-15,5,1103
-audit,Audit current employee benefits program.,2024-11-15,5,1106
-write,Write code documentation for project repository.,2024-11-15,5,1110
-optimize,Optimize search algorithm for faster results.,2024-11-15,4,1064
-update,Update privacy policy for website.,2024-11-15,4,1068
-train,Train customer support team on new platform features.,2024-11-15,4,1073
-create,Create demo video for product launch.,2024-11-15,4,1078
-coordinate,Coordinate with design team on website redesign.,2024-11-15,4,1093
-optimize,Optimize performance of mobile app.,2024-11-15,4,1098
-plan,Plan team meeting agenda for next week.,2024-11-15,4,1102
-coordinate,Coordinate with HR for employee onboarding.,2024-11-15,4,1107
+implement,Implement new design for homepage.,2024-11-14,4,1044
+update,Update API documentation.,2024-11-14,4,1049
+design,Design user interface for new app version.,2024-11-14,4,1053
+debug,Debug issue with user registration process.,2024-11-14,4,1057
+refactor,Refactor codebase for better readability.,2024-11-14,5,1045
+train,Train new employees on internal processes.,2024-11-14,5,1050
+audit,Audit marketing spending for Q4.,2024-11-14,5,1055
+coordinate,Coordinate with vendors for upcoming project.,2024-11-14,5,1059
+improve,Improve user interface for better accessibility.,2024-11-15,1,1061
+write,Write product documentation for new software.,2024-11-15,1,1069
+analyze,Analyze data from user testing of new features.,2024-11-15,1,1074
+audit,Audit financial transactions for the quarter.,2024-11-15,1,1094
+prepare,Prepare social media content for product release.,2024-11-15,1,1100
+research,Research potential customers for product expansion.,2024-11-15,2,1062
+plan,Plan marketing strategy for the holiday season.,2024-11-15,2,1066
+prepare,Prepare presentation for investors.,2024-11-15,2,1072
+refactor,Refactor code to improve system performance.,2024-11-15,2,1076
+organize,Organize team-building event for employees.,2024-11-15,2,1091
+create,Create presentation for board meeting.,2024-11-15,2,1095
+write,Write content for blog about new product.,2024-11-15,2,1099
+design,Design logo for upcoming product line.,2024-11-15,2,1104
+manage,Manage customer support tickets.,2024-11-15,2,1108
 schedule,Schedule team meeting for upcoming sprint.,2024-11-15,3,1063
 design,Design new feature for mobile app.,2024-11-15,3,1067
 review,Review upcoming product release schedule.,2024-11-15,3,1071
@@ -89,39 +78,27 @@ review,Review draft of upcoming product brochure.,2024-11-15,3,1097
 analyze,Analyze customer behavior on website.,2024-11-15,3,1101
 test,Test user registration process after update.,2024-11-15,3,1105
 optimize,Optimize website load time for better UX.,2024-11-15,3,1109
-research,Research potential customers for product expansion.,2024-11-15,2,1062
-plan,Plan marketing strategy for the holiday season.,2024-11-15,2,1066
-prepare,Prepare presentation for investors.,2024-11-15,2,1072
-refactor,Refactor code to improve system performance.,2024-11-15,2,1076
-organize,Organize team-building event for employees.,2024-11-15,2,1091
-create,Create presentation for board meeting.,2024-11-15,2,1095
-write,Write content for blog about new product.,2024-11-15,2,1099
-design,Design logo for upcoming product line.,2024-11-15,2,1104
-manage,Manage customer support tickets.,2024-11-15,2,1108
-improve,Improve user interface for better accessibility.,2024-11-15,1,1061
-write,Write product documentation for new software.,2024-11-15,1,1069
-analyze,Analyze data from user testing of new features.,2024-11-15,1,1074
-audit,Audit financial transactions for the quarter.,2024-11-15,1,1094
-prepare,Prepare social media content for product release.,2024-11-15,1,1100
-refactor,Refactor backend API for better performance.,2024-11-16,5,1115
-audit,Audit company’s data privacy policies.,2024-11-16,5,1122
-create,Create wireframes for upcoming product features.,2024-11-16,5,1127
-debug,Debug issues with online ordering system.,2024-11-16,5,1132
-analyze,Analyze social media metrics for upcoming product launch.,2024-11-16,5,1136
-manage,Manage software releases and bug fixes.,2024-11-16,5,1140
-plan,Plan project milestones for next quarter.,2024-11-16,4,1114
-coordinate,Coordinate with vendors for supply chain issues.,2024-11-16,4,1118
-optimize,Optimize website for SEO and performance.,2024-11-16,4,1125
-review,Review customer feedback on recent product release.,2024-11-16,4,1130
-optimize,Optimize email campaign for higher open rates.,2024-11-16,4,1135
-test,Test database backups and recovery process.,2024-11-16,4,1139
-test,Test website for compatibility with new browsers.,2024-11-16,3,1113
-research,Research new tools for project management.,2024-11-16,3,1117
-organize,Organize company-wide meeting to discuss progress.,2024-11-16,3,1121
-design,Design user interface for new mobile app.,2024-11-16,3,1124
-write,Write product specifications for new app features.,2024-11-16,3,1129
-prepare,Prepare data for quarterly financial review.,2024-11-16,3,1134
-refactor,Refactor frontend code for improved UX.,2024-11-16,3,1137
+optimize,Optimize search algorithm for faster results.,2024-11-15,4,1064
+update,Update privacy policy for website.,2024-11-15,4,1068
+train,Train customer support team on new platform features.,2024-11-15,4,1073
+create,Create demo video for product launch.,2024-11-15,4,1078
+coordinate,Coordinate with design team on website redesign.,2024-11-15,4,1093
+optimize,Optimize performance of mobile app.,2024-11-15,4,1098
+plan,Plan team meeting agenda for next week.,2024-11-15,4,1102
+coordinate,Coordinate with HR for employee onboarding.,2024-11-15,4,1107
+implement,Implement security patch for web application.,2024-11-15,5,1065
+debug,Debug critical issue in mobile app.,2024-11-15,5,1070
+audit,Audit project budget for Q4 spending.,2024-11-15,5,1075
+coordinate,Coordinate with design team on new branding.,2024-11-15,5,1079
+train,Train sales team on new product features.,2024-11-15,5,1090
+sync,Sync data between internal and external systems.,2024-11-15,5,1096
+debug,Debug error with payment gateway integration.,2024-11-15,5,1103
+audit,Audit current employee benefits program.,2024-11-15,5,1106
+write,Write code documentation for project repository.,2024-11-15,5,1110
+evaluate,Evaluate new design proposals for mobile app.,2024-11-16,1,1111
+review123,Review contract with new supplier.,2024-11-16,1,1119
+plan,Plan employee recognition program for Q4.,2024-11-16,1,1126
+implement,Implement new marketing automation tool.,2024-11-16,1,1131
 debug,Debug issues in customer account management system.,2024-11-16,2,1112
 prepare,Prepare marketing content for seasonal sale.,2024-11-16,2,1116
 write,Write blog post on upcoming software release.,2024-11-16,2,1120
@@ -129,9 +106,27 @@ sync,Sync project timelines across all departments.,2024-11-16,2,1123
 train,Train team on new customer support protocols.,2024-11-16,2,1128
 coordinate,Coordinate with marketing team on ad campaign.,2024-11-16,2,1133
 plan,Plan customer service strategies for next month.,2024-11-16,2,1138
-evaluate,Evaluate new design proposals for mobile app.,2024-11-16,1,1111
-review123,Review contract with new supplier.,2024-11-16,1,1119
-plan,Plan employee recognition program for Q4.,2024-11-16,1,1126
-implement,Implement new marketing automation tool.,2024-11-16,1,1131
+test,Test website for compatibility with new browsers.,2024-11-16,3,1113
+research,Research new tools for project management.,2024-11-16,3,1117
+organize,Organize company-wide meeting to discuss progress.,2024-11-16,3,1121
+design,Design user interface for new mobile app.,2024-11-16,3,1124
+write,Write product specifications for new app features.,2024-11-16,3,1129
+prepare,Prepare data for quarterly financial review.,2024-11-16,3,1134
+refactor,Refactor frontend code for improved UX.,2024-11-16,3,1137
+plan,Plan project milestones for next quarter.,2024-11-16,4,1114
+coordinate,Coordinate with vendors for supply chain issues.,2024-11-16,4,1118
+optimize,Optimize website for SEO and performance.,2024-11-16,4,1125
+review,Review customer feedback on recent product release.,2024-11-16,4,1130
+optimize,Optimize email campaign for higher open rates.,2024-11-16,4,1135
+test,Test database backups and recovery process.,2024-11-16,4,1139
+refactor,Refactor backend API for better performance.,2024-11-16,5,1115
+audit,Audit company’s data privacy policies.,2024-11-16,5,1122
+create,Create wireframes for upcoming product features.,2024-11-16,5,1127
+debug,Debug issues with online ordering system.,2024-11-16,5,1132
+analyze,Analyze social media metrics for upcoming product launch.,2024-11-16,5,1136
+manage,Manage software releases and bug fixes.,2024-11-16,5,1140
 Task Title,Task Description,2024-12-08,3,1145
 Task Title,Task Description,2024-12-08,3,1146
+Task Titlesiema,Task Description,2024-12-09,3,1147
+Task Title,Task Description,2024-12-09,3,1148
+zakrec kurwa swa,siema to ja rafon sprawdzam sie tutaj na tym pozytywnym bicie wariacie,2024-12-01,3,1149
